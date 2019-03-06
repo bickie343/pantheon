@@ -83,6 +83,7 @@ import tech.pegasys.pantheon.ethereum.jsonrpc.internal.methods.permissioning.Per
 import tech.pegasys.pantheon.ethereum.jsonrpc.internal.methods.permissioning.PermRemoveNodesFromWhitelist;
 import tech.pegasys.pantheon.ethereum.jsonrpc.internal.methods.privacy.EeaGetTransactionReceipt;
 import tech.pegasys.pantheon.ethereum.jsonrpc.internal.methods.privacy.EeaSendRawTransaction;
+import tech.pegasys.pantheon.ethereum.jsonrpc.internal.methods.sidechains.CreateSidechain;
 import tech.pegasys.pantheon.ethereum.jsonrpc.internal.parameters.JsonRpcParameter;
 import tech.pegasys.pantheon.ethereum.jsonrpc.internal.processor.BlockReplay;
 import tech.pegasys.pantheon.ethereum.jsonrpc.internal.processor.TransactionTracer;
@@ -281,6 +282,12 @@ public class JsonRpcMethodsFactory {
           enabledMethods,
           new EeaGetTransactionReceipt(
               blockchainQueries, new Enclave(privacyParameters.getUrl()), parameter));
+    }
+    if (true) {
+      addMethods(
+          enabledMethods,
+          new CreateSidechain(blockchainQueries)
+          );
     }
     return enabledMethods;
   }
