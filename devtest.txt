@@ -1,0 +1,2 @@
+network="dev"
+rpc-http-enabled=true
