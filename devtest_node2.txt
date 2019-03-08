@@ -1,0 +1,7 @@
+network="dev"
+rpc-http-enabled=true
+discovery-enabled=true
+data-path="node2"
+p2p-port=30201
+rpc-http-port=30211
+bootnodes=["enode://732ace29eac7253fed280d68b82544061f11d607609ea4aba165c8de96e36c104b6ab37db663be41c8645248f8168682d6295e8681447a5311d8c6e1a72afd01@127.0.0.1:30101"]

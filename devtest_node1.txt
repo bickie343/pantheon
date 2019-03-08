@@ -1,0 +1,6 @@
+network="dev"
+rpc-http-enabled=true
+discovery-enabled=true
+data-path="node1"
+p2p-port=30101
+rpc-http-port=30111
