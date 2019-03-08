@@ -12,20 +12,39 @@
  */
 package tech.pegasys.pantheon;
 
-import static org.apache.logging.log4j.LogManager.getLogger;
-
+import picocli.CommandLine.RunLast;
+import poc.SideChainCreator;
 import tech.pegasys.pantheon.cli.PantheonCommand;
 import tech.pegasys.pantheon.cli.PantheonControllerBuilder;
 import tech.pegasys.pantheon.ethereum.eth.sync.SynchronizerConfiguration;
 import tech.pegasys.pantheon.util.BlockImporter;
 
-import picocli.CommandLine.RunLast;
+import java.io.IOException;
+
+import static org.apache.logging.log4j.LogManager.getLogger;
 
 public final class Pantheon {
   private static final int SUCCESS_EXIT_CODE = 0;
   private static final int ERROR_EXIT_CODE = 1;
 
   public static void main(final String... args) {
+
+    // Create sidechains child process
+    String path = SideChainCreator.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+//    String command = "java -jar " + path;
+    Process p = null;
+    try {
+      p = new ProcessBuilder().command("java", "-jar", path).inheritIO().start();
+      p.waitFor();
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+//    Process iostat = new ProcessBuilder().command("iostat", "-C").inheritIO().start();
+//    int exitCode = iostat.waitFor();
+//    System.out.println("exitCode = " + exitCode);
 
     final PantheonCommand pantheonCommand =
         new PantheonCommand(

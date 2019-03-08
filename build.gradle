@@ -519,3 +519,8 @@ bintray {
 afterReleaseBuild.dependsOn bintrayUpload
 bintrayUpload.mustRunAfter(distTar)
 bintrayUpload.mustRunAfter(distZip)
+
+dependencies {
+  compile files("./Sidechains-POC/build/libs/poc.jar")
+//  compile project(":poc")
+}

@@ -39,3 +39,16 @@ include 'services:queue'
 include 'services:util'
 include 'testutil'
 include 'util'
+include 'poc'
+project(':poc').projectDir = new File("Sidechains-POC")
+include 'tech.pegasys.era'
+project(':tech.pegasys.era').projectDir = new File("./Sidechains-POC/ERA/wrappers/java")
+
+//// make jar executable
+//jar {
+//    manifest {
+//        attributes(
+//                'Main-Class': 'poc.SideChainCreator'
+//        )
+//    }
+//}

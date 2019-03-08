@@ -2,3 +2,6 @@
 	path = ethereum/referencetests/src/test/resources
 	url = https://github.com/ethereum/tests.git
 	ignore = all
+[submodule "Sidechains-POC"]
+	path = Sidechains-POC
+	url = git@github.com:PegaSysEng/Sidechains-POC.git
