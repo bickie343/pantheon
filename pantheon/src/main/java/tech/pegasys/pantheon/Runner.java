@@ -41,7 +41,9 @@ public class Runner implements AutoCloseable {
 
   private final ExecutorService exec = Executors.newCachedThreadPool();
 
+  // Note: Sidechain tweaks
   private final NetworkRunner networkRunner;
+  private final NetworkRunner sidechainNetworkRunner;
   private final Optional<JsonRpcHttpService> jsonRpc;
   private final Optional<WebSocketService> websocketRpc;
   private final Optional<MetricsService> metrics;
@@ -52,6 +54,7 @@ public class Runner implements AutoCloseable {
   Runner(
       final Vertx vertx,
       final NetworkRunner networkRunner,
+      final NetworkRunner sidechainNetworkRunner,
       final Optional<JsonRpcHttpService> jsonRpc,
       final Optional<WebSocketService> websocketRpc,
       final Optional<MetricsService> metrics,
@@ -59,6 +62,7 @@ public class Runner implements AutoCloseable {
       final Path dataDir) {
     this.vertx = vertx;
     this.networkRunner = networkRunner;
+    this.sidechainNetworkRunner = sidechainNetworkRunner;
     this.jsonRpc = jsonRpc;
     this.websocketRpc = websocketRpc;
     this.metrics = metrics;
@@ -73,12 +77,14 @@ public class Runner implements AutoCloseable {
       if (networkRunner.getNetwork().isP2pEnabled()) {
         pantheonController.getSynchronizer().start();
       }
+      sidechainNetworkRunner.start();
       jsonRpc.ifPresent(service -> service.start().join());
       websocketRpc.ifPresent(service -> service.start().join());
       metrics.ifPresent(service -> service.start().join());
       LOG.info("Ethereum main loop is up.");
       writePantheonPortsToFile();
       networkRunner.awaitStop();
+      sidechainNetworkRunner.awaitStop();
     } catch (final InterruptedException e) {
       LOG.debug("Interrupted, exiting", e);
       Thread.currentThread().interrupt();

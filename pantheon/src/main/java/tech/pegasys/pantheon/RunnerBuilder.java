@@ -246,6 +246,38 @@ public class RunnerBuilder {
             .metricsSystem(metricsSystem)
             .build();
 
+    // Note: Sidechain tweaks
+    // disable network discovery for sidechains
+    DiscoveryConfiguration sidechainDiscoveryConfiguration = DiscoveryConfiguration.create();//.setActive(false);
+    sidechainDiscoveryConfiguration.setBindPort(listenPort + 1);
+
+    final NetworkingConfiguration sidechainsNetworkConfig =
+            new NetworkingConfiguration()
+                    .setRlpx(RlpxConfiguration.create().setBindPort(listenPort + 1).setMaxPeers(1))
+                    .setDiscovery(sidechainDiscoveryConfiguration)
+                    .setClientId(PantheonInfo.version())
+                    .setSupportedProtocols(subProtocols);
+
+    final NetworkRunner sidechainNetworkRunner =
+        NetworkRunner.builder()
+            .protocolManagers(protocolManagers)
+            .subProtocols(subProtocols)
+            .network(
+                p2pEnabled
+                    ? caps ->
+                        new NettyP2PNetwork(
+                            vertx,
+                            keyPair,
+                            sidechainsNetworkConfig,
+                            caps,
+                            synchronizer::hasSufficientPeers,
+                            peerBlacklist,
+                            metricsSystem,
+                            nodeWhitelistController)
+                    : caps -> new NoopP2PNetwork())
+            .metricsSystem(metricsSystem)
+            .build();
+
     final TransactionPool transactionPool = pantheonController.getTransactionPool();
     final MiningCoordinator miningCoordinator = pantheonController.getMiningCoordinator();
     final Optional<AccountWhitelistController> accountWhitelistController =
@@ -328,6 +360,7 @@ public class RunnerBuilder {
     return new Runner(
         vertx,
         networkRunner,
+        sidechainNetworkRunner,   // Note: Sidechain tweaks
         jsonRpcHttpService,
         webSocketService,
         metricsService,
