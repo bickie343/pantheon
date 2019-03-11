@@ -1,0 +1,10 @@
+network="dev"
+rpc-http-enabled=true
+rpc-http-api=["ADMIN", "ETH", "NET"]
+discovery-enabled=true
+data-path="node2"
+p2p-port=30021
+rpc-http-port=30022
+sidechains-in-process-enabled=true
+sidechains-port=30023
+bootnodes=["enode://5dd1f7e5e5e843de45799a80a48437a07548e8b5f228e5652c7970e32372bceea58792a6de2069aec0ff7dc8771fede54af9f233154609d0e095d1bb0d74b064@127.0.0.1:30011"]

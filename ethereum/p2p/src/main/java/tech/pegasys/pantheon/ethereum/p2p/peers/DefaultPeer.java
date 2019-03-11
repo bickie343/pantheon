@@ -37,6 +37,7 @@ public class DefaultPeer extends DefaultPeerId implements Peer {
   public static final int PEER_ID_SIZE = 64;
 
   public static final int DEFAULT_PORT = 30303;
+  public static final int SIDECHAINS_DEFAULT_PORT = 8080;
   private static final Pattern DISCPORT_QUERY_STRING_REGEX =
       Pattern.compile("discport=([0-9]{1,5})");
 

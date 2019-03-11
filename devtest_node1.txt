@@ -1,0 +1,9 @@
+network="dev"
+rpc-http-enabled=true
+rpc-http-api=["ADMIN", "ETH", "NET"]
+discovery-enabled=true
+data-path="node1"
+p2p-port=30011
+rpc-http-port=30012
+sidechains-in-process-enabled=true
+sidechains-port=30013
