@@ -87,40 +87,12 @@ public class SidechainsPantheonRunner {
                 System.out.println("Received response with status code " + response.statusCode());
               });
             });
-    req.putHeader("content-length", "1000");
-    req.putHeader("content-type", "text/plain");
+//    req.putHeader("content-length", "1000");
+    req.setChunked(true);
+    req.putHeader("content-type", "application/json");
     req.write("{\"jsonrpc\":\"2.0\",\"method\":\"admin_nodeInfo\",\"params\":[],\"id\":53}");
     req.end();
   }
-
-//  public void getAddress(String dataPath) {
-//
-//    String classpathStr = System.getProperty("java.class.path");
-//
-//    try {
-//      String[] command = {
-//              "java",
-//              "-cp", classpathStr,
-//              "tech.pegasys.pantheon.Pantheon",
-//              "--network=dev",
-//              "--rpc-http-enabled=true",
-//              "--discovery-enabled=true",
-//              "--data-path=" + dataPath,
-//              "--bootnodes"
-//      };
-//
-//      logger.info("Launching Pantheon sidechains instance with " + Arrays.toString(command));
-//
-//      p = new ProcessBuilder()
-//              .command(command)
-//              .inheritIO()
-//              .start();
-////      p.waitFor();
-//    } catch (IOException e) {
-//      System.out.println(Arrays.toString(e.getStackTrace()));
-//      //            e.printStackTrace();
-//    }
-//  }
 
   public void stop() {
     p.destroy();

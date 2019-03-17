@@ -46,12 +46,15 @@ public class HttpServerEventLoop {
                   runner.start("sidechain2", "40301", rpcHttpPort);
 
                   // Try to read enode contact information for the node I just created
-//                  try {
-//                    Thread.sleep(5000);
-//                  } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                  }
-//
+                  try {
+                    Thread.sleep(5000);
+                  } catch (InterruptedException e) {
+                    e.printStackTrace();
+                  }
+
+                  GetEnode getter = new GetEnode(vertx);
+                  getter.getEnode("127.0.0.1", rpcHttpPort);
+
 //                  runner.getEnode(rpcHttpPort);
                 }
 
