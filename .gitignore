@@ -25,3 +25,5 @@ target/
 tmp/
 build/
 out/
+node[0-9]*/
+sidechain[0-9]*/

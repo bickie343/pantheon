@@ -20,6 +20,7 @@ import static tech.pegasys.pantheon.ethereum.jsonrpc.JsonRpcConfiguration.DEFAUL
 import static tech.pegasys.pantheon.ethereum.jsonrpc.RpcApis.DEFAULT_JSON_RPC_APIS;
 import static tech.pegasys.pantheon.ethereum.jsonrpc.websocket.WebSocketConfiguration.DEFAULT_WEBSOCKET_PORT;
 import static tech.pegasys.pantheon.ethereum.p2p.peers.DefaultPeer.DEFAULT_PORT;
+import static tech.pegasys.pantheon.ethereum.p2p.peers.DefaultPeer.SIDECHAINS_DEFAULT_PORT;
 import static tech.pegasys.pantheon.metrics.MetricCategory.DEFAULT_METRIC_CATEGORIES;
 import static tech.pegasys.pantheon.metrics.prometheus.MetricsConfiguration.DEFAULT_METRICS_PORT;
 import static tech.pegasys.pantheon.metrics.prometheus.MetricsConfiguration.DEFAULT_METRICS_PUSH_PORT;
@@ -91,6 +92,8 @@ import picocli.CommandLine.ExecutionException;
 import picocli.CommandLine.ITypeConverter;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.ParameterException;
+import tech.pegasys.sidechains.HttpServerEventLoop;
+import tech.pegasys.sidechains.SidechainsCreatorRunner;
 
 @SuppressWarnings("FieldCanBeLocal") // because Picocli injected fields report false positives
 @Command(
@@ -242,6 +245,23 @@ public class PantheonCommand implements DefaultCommandValues, Runnable {
           "P2P network identifier. (default: the selected network chain ID or custom genesis chain ID)",
       arity = "1")
   private final Integer networkId = null;
+
+  @Option(
+      names = {"--sidechains-in-process-enabled"},
+      description = "Set to start the sidechains JSON-RPC HTTP service (default: ${DEFAULT-VALUE})")
+  public final Boolean isSidechainsInProcessEnabled = false;
+
+  @Option(
+      names = {"--sidechains-out-of-process-enabled"},
+      description = "Set to start the sidechains JSON-RPC HTTP service (default: ${DEFAULT-VALUE})")
+  public final Boolean isSidechainsOutOfProcessEnabled = false;
+
+  @Option(
+          names = {"--sidechains-port"},
+          paramLabel = MANDATORY_PORT_FORMAT_HELP,
+          description = "Port for sidechains creation to listen on (default: ${DEFAULT-VALUE})",
+          arity = "1")
+  public final Integer sidechainsPort = SIDECHAINS_DEFAULT_PORT;
 
   @Option(
       names = {"--rpc-http-enabled"},
@@ -590,6 +610,17 @@ public class PantheonCommand implements DefaultCommandValues, Runnable {
         logger.warn(
             "Permissions config file set {} but no permissions enabled", permissionsConfigFile());
       }
+    }
+
+    // launch sidechains
+    if (isSidechainsOutOfProcessEnabled) {
+      logger.info("Starting Sidechains OUT of process...");
+      SidechainsCreatorRunner runner = new SidechainsCreatorRunner();
+      runner.start(this.sidechainsPort);
+    } else if (isSidechainsInProcessEnabled) {
+      logger.info("Starting Sidechains IN process...");
+      HttpServerEventLoop server = new HttpServerEventLoop();
+      server.runLoop(this.sidechainsPort);
     }
 
     final EthNetworkConfig ethNetworkConfig = updateNetworkConfig(getNetwork());
