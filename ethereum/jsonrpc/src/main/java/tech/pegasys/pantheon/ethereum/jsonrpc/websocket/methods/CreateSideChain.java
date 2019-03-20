@@ -13,29 +13,36 @@
 
 package tech.pegasys.pantheon.ethereum.jsonrpc.websocket.methods;
 
+import io.vertx.core.json.JsonObject;
+import org.apache.logging.log4j.Logger;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.http.HttpService;
 import tech.pegasys.pantheon.ethereum.jsonrpc.internal.JsonRpcRequest;
 import tech.pegasys.pantheon.ethereum.jsonrpc.internal.response.JsonRpcResponse;
 import tech.pegasys.pantheon.ethereum.jsonrpc.internal.response.JsonRpcSuccessResponse;
-import tech.pegasys.pantheon.ethereum.jsonrpc.internal.results.Quantity;
+import tech.pegasys.pantheon.ethereum.jsonrpc.websocket.methods.era.DomainInfo;
 import tech.pegasys.pantheon.ethereum.jsonrpc.websocket.methods.era.EthereumRegistrationAuthorityFactory;
 import tech.pegasys.pantheon.ethereum.jsonrpc.websocket.methods.era.Finder;
 import tech.pegasys.pantheon.ethereum.jsonrpc.websocket.subscription.SubscriptionManager;
 import tech.pegasys.pantheon.ethereum.jsonrpc.websocket.subscription.request.SubscriptionRequestMapper;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.apache.logging.log4j.LogManager.getLogger;
 
 public class CreateSideChain extends AbstractSubscriptionMethod {
 
     private static final String DEFAULT_TOP_ERA_ADDRESS = "0x81d5fc4038318142f85131bff07c2405f38f16e2";
     private static final String DEFAULT_FINDER_ADDRESS = "0xb417f71159ff9ffd583c840d4717d384d5977f16";
-    private static final String DEFAULT_TOKEN = "3fb2c983929549e6b75fb252ed9a62a8";
+    private static final String DEFAULT_INFURA_TOKEN = "3fb2c983929549e6b75fb252ed9a62a8";
 
-    CreateSideChain(
-            final SubscriptionManager subscriptionManager, final SubscriptionRequestMapper mapper) {
+    private final Logger logger;
+
+    CreateSideChain(final SubscriptionManager subscriptionManager, final SubscriptionRequestMapper mapper) {
         super(subscriptionManager, mapper);
+        this.logger = getLogger();
     }
 
     @Override
@@ -45,17 +52,32 @@ public class CreateSideChain extends AbstractSubscriptionMethod {
 
     @Override
     public JsonRpcResponse response(final JsonRpcRequest req) {
-        Web3j web3j = Web3j.build(new HttpService("https://rinkeby.infura.io/v3/" + DEFAULT_TOKEN));
+        Web3j web3j = Web3j.build(new HttpService("https://rinkeby.infura.io/v3/" + DEFAULT_INFURA_TOKEN));
         EthereumRegistrationAuthorityFactory factory = new EthereumRegistrationAuthorityFactory(web3j);
         Finder finder = factory.finderAtAddressRead(DEFAULT_FINDER_ADDRESS);
-        String address;
+        JsonObject response = new JsonObject();
         try {
-            address = getDomainInfoAddress(finder, String.valueOf(req.getParams()[0]));
+            String address = getDomainInfoAddress(finder, String.valueOf(req.getParams()[0]));
+
+            // get actual domain information
+            DomainInfo domainInfo = factory.domainInfoAtAddressRead(address);
+            response.put("ip", new String(domainInfo.getValue("ip"), StandardCharsets.UTF_8));
+            response.put("port", new String(domainInfo.getValue("port"), StandardCharsets.UTF_8));
+
+            // launch pantheon node
+
+            response.put("result", "Success");
         } catch (Exception e) {
-            address = "Exception";
+            String msg = "Error encountered when reading ERA records using finder " + DEFAULT_FINDER_ADDRESS;
+            logger.error(msg, e);
+            response.put("msg", msg);
+            response.put("error", e.toString());
         }
 
-        return new JsonRpcSuccessResponse(req.getId(), address);
+        response.put("time", System.currentTimeMillis())
+                .put("thread", Thread.currentThread().getName());
+
+        return new JsonRpcSuccessResponse(req.getId(), response.encodePrettily());
     }
 
     private String getDomainInfoAddress(Finder finder, String domainName) throws Exception {
