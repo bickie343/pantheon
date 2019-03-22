@@ -25,6 +25,8 @@ import tech.pegasys.pantheon.ethereum.jsonrpc.websocket.methods.era.EthereumRegi
 import tech.pegasys.pantheon.ethereum.jsonrpc.websocket.methods.era.Finder;
 import tech.pegasys.pantheon.ethereum.jsonrpc.websocket.subscription.SubscriptionManager;
 import tech.pegasys.pantheon.ethereum.jsonrpc.websocket.subscription.request.SubscriptionRequestMapper;
+import tech.pegasys.pantheon.sidechains.SidechainsConfiguration;
+import tech.pegasys.pantheon.sidechains.SidechainsPantheonRunner;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -33,10 +35,6 @@ import java.util.List;
 import static org.apache.logging.log4j.LogManager.getLogger;
 
 public class CreateSideChain extends AbstractSubscriptionMethod {
-
-    private static final String DEFAULT_TOP_ERA_ADDRESS = "0x81d5fc4038318142f85131bff07c2405f38f16e2";
-    private static final String DEFAULT_FINDER_ADDRESS = "0xb417f71159ff9ffd583c840d4717d384d5977f16";
-    private static final String DEFAULT_INFURA_TOKEN = "3fb2c983929549e6b75fb252ed9a62a8";
 
     private final Logger logger;
 
@@ -52,9 +50,9 @@ public class CreateSideChain extends AbstractSubscriptionMethod {
 
     @Override
     public JsonRpcResponse response(final JsonRpcRequest req) {
-        Web3j web3j = Web3j.build(new HttpService("https://rinkeby.infura.io/v3/" + DEFAULT_INFURA_TOKEN));
+        Web3j web3j = Web3j.build(new HttpService("https://rinkeby.infura.io/v3/" + SidechainsConfiguration.infuraToken));
         EthereumRegistrationAuthorityFactory factory = new EthereumRegistrationAuthorityFactory(web3j);
-        Finder finder = factory.finderAtAddressRead(DEFAULT_FINDER_ADDRESS);
+        Finder finder = factory.finderAtAddressRead(SidechainsConfiguration.finderAddress);
         JsonObject response = new JsonObject();
         try {
             String address = getDomainInfoAddress(finder, String.valueOf(req.getParams()[0]));
@@ -65,10 +63,11 @@ public class CreateSideChain extends AbstractSubscriptionMethod {
             response.put("port", new String(domainInfo.getValue("port"), StandardCharsets.UTF_8));
 
             // launch pantheon node
+            new SidechainsPantheonRunner().start();
 
             response.put("result", "Success");
         } catch (Exception e) {
-            String msg = "Error encountered when reading ERA records using finder " + DEFAULT_FINDER_ADDRESS;
+            String msg = "Error encountered when reading ERA records using finder " + SidechainsConfiguration.finderAddress;
             logger.error(msg, e);
             response.put("msg", msg);
             response.put("error", e.toString());
@@ -85,7 +84,7 @@ public class CreateSideChain extends AbstractSubscriptionMethod {
         String p2DomainName = p1DomainName.substring(p1DomainName.indexOf(".") + 1);
         String p3DomainName = p2DomainName.substring(p2DomainName.indexOf(".") + 1);
         List<String> eraList = new ArrayList<>();
-        eraList.add(DEFAULT_TOP_ERA_ADDRESS);
+        eraList.add(SidechainsConfiguration.eraAddress);
         return finder.resolveDomain(eraList,
                 domainName, p1DomainName, p2DomainName, p3DomainName);
     }

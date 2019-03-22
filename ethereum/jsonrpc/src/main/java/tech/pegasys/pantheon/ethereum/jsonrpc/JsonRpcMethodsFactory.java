@@ -96,6 +96,7 @@ import tech.pegasys.pantheon.ethereum.privacy.PrivateTransactionHandler;
 import tech.pegasys.pantheon.ethereum.transaction.TransactionSimulator;
 import tech.pegasys.pantheon.ethereum.worldstate.WorldStateArchive;
 import tech.pegasys.pantheon.metrics.MetricsSystem;
+import tech.pegasys.pantheon.sidechains.CreateSidechain;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -284,6 +285,12 @@ public class JsonRpcMethodsFactory {
               new Enclave(privacyParameters.getUrl()),
               parameter,
               privacyParameters));
+    }
+    if (rpcApis.contains(RpcApis.SC)) {
+      addMethods(
+              enabledMethods,
+              new CreateSidechain()
+      );
     }
     return enabledMethods;
   }

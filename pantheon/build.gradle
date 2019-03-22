@@ -42,6 +42,7 @@ dependencies {
   implementation project(':metrics')
   implementation project(':enclave')
   implementation project(':services:kvstore')
+  implementation project(':sidechains')
 
   implementation 'com.google.guava:guava'
   implementation 'info.picocli:picocli'

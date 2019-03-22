@@ -40,3 +40,5 @@ include 'services:tasks'
 include 'services:util'
 include 'testutil'
 include 'util'
+include 'sidechains'
+
