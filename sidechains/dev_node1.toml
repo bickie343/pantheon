@@ -1,15 +1,6 @@
 
 # My TOML file for Pantheon instance for node1 domain
 
-# Typical commandline to run Pantheon with this configuration file
-# pantheon --config-file sidechains/dev_node1.toml
-
-# Use `wscat -c ws://127.0.0.1:30013` to connect to the websocket in console mode
-#     `{"jsonrpc":"2.0","method":"sc_create","params":["node4"],"id":53}`
-#
-# Or in one command:
-# `wscat -c ws://127.0.0.1:30013 -x "{\"jsonrpc\":\"2.0\",\"method\":\"sc_create\",\"params\":[\"node4\"],\"id\":53}"`
-
 # Enable sidechains
 sidechains-enabled=true
 
@@ -24,14 +15,15 @@ network="dev"
 discovery-enabled=true
 rpc-http-enabled=true
 rpc-http-port=30012
-rpc-http-api=["ADMIN", "ETH", "NET", "SC"]
+rpc-http-api=["SC"]
 rpc-ws-enabled=true
 rpc-ws-port=30013
-rpc-ws-api=["ADMIN", "ETH", "NET", "SC"]
+rpc-ws-api=["SC"]
 p2p-port=30011
 
 # Setup for created sidechain nodes
 sidechains-data-path="sidechains/sidechain"
 sidechains-p2p-port=30014
-sidechains-http-port=3015
-sidechains-port=30016
+sidechains-rpc-http-port=30015
+sidechains-rpc-ws-port=30016
+sidechains-sc-rpc-http-port=30017

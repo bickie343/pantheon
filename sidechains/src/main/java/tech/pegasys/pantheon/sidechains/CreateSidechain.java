@@ -62,7 +62,11 @@ public class CreateSidechain implements JsonRpcMethod {
       response.put("port", new String(domainInfo.getValue("port"), StandardCharsets.UTF_8));
 
       // launch pantheon node
-      String msg = new SidechainsPantheonRunner().start();
+      SidechainConfigFactory.Config config = SidechainConfigFactory.createConfig();
+      String msg = new SidechainsPantheonRunner().start(config);
+
+      // get enode information of our pantheon node
+      GetEnodeData.getEnode("127.0.0.1", config.rpcHttpPort, 0);
 
       response.put("result", "Success");
       response.put("msg", msg);

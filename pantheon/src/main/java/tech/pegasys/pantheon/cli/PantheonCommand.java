@@ -404,18 +404,6 @@ public class PantheonCommand implements DefaultCommandValues, Runnable {
   public final Integer sidechainsPort = SidechainsConfiguration.SIDECHAINS_DEFAULT_PORT;
 
   @Option(
-          names = {"--sidechains-p2p-port"},
-          paramLabel = MANDATORY_PORT_FORMAT_HELP,
-          description = "P2P port for new sidechain node to listen on (default: ${DEFAULT-VALUE})")
-  public final Integer sidechainsP2pPort = SidechainsConfiguration.SIDECHAINS_DEFAULT_PORT;
-
-  @Option(
-          names = {"--sidechains-http-port"},
-          paramLabel = MANDATORY_PORT_FORMAT_HELP,
-          description = "HTTP port for new sidechain node to listen on (default: ${DEFAULT-VALUE})")
-  public final Integer sidechainsHttpPort = SidechainsConfiguration.SIDECHAINS_DEFAULT_PORT;
-
-  @Option(
           names = {"--finder-address"},
           description = "Address of the ERA finder (default: ${DEFAULT-VALUE})")
   public String finderAddress = SidechainsConfiguration.DEFAULT_ADDRESS;
@@ -436,14 +424,39 @@ public class PantheonCommand implements DefaultCommandValues, Runnable {
   public String sidechainsDataPath = SidechainsConfiguration.DEFAULT_ADDRESS;
 
   @Option(
-          names = {"--sidechains-rpc-http-api", "--sidechains-rpc-http-apis"},
-          paramLabel = "<api name>",
-          split = ",",
-          arity = "1..*",
-          converter = RpcApisConverter.class,
-          description =
-                  "Comma separated list of APIs to enable on JSON-RPC HTTP service on a sidechain (default: ${DEFAULT-VALUE})")
-  private final Collection<RpcApi> sidechainRpcHttpApis = DEFAULT_JSON_RPC_APIS;
+          names = {"--sidechains-p2p-port"},
+          paramLabel = MANDATORY_PORT_FORMAT_HELP,
+          description = "P2P port for new sidechain node to listen on (default: ${DEFAULT-VALUE})")
+  public final Integer sidechainsP2pPort = SidechainsConfiguration.SIDECHAINS_DEFAULT_PORT;
+
+  @Option(
+          names = {"--sidechains-rpc-http-port"},
+          paramLabel = MANDATORY_PORT_FORMAT_HELP,
+          description = "HTTP port for new sidechain node to listen on (default: ${DEFAULT-VALUE})")
+  public final Integer sidechainsRpcHttpPort = SidechainsConfiguration.SIDECHAINS_DEFAULT_PORT;
+
+  @Option(
+          names = {"--sidechains-rpc-ws-port"},
+          paramLabel = MANDATORY_PORT_FORMAT_HELP,
+          description = "HTTP port for new sidechain node to listen on (default: ${DEFAULT-VALUE})")
+  public final Integer sidechainsRpcWsPort = SidechainsConfiguration.SIDECHAINS_DEFAULT_PORT;
+
+  @Option(
+          names = {"--sidechains-sc-rpc-http-port"},
+          paramLabel = MANDATORY_PORT_FORMAT_HELP,
+          description = "HTTP port for new sidechain node to listen on (default: ${DEFAULT-VALUE})")
+  public final Integer sidechainsScRpcHttpPort = SidechainsConfiguration.SIDECHAINS_DEFAULT_PORT;
+
+
+//  @Option(
+//          names = {"--sidechains-rpc-http-api", "--sidechains-rpc-http-apis"},
+//          paramLabel = "<api name>",
+//          split = ",",
+//          arity = "1..*",
+//          converter = RpcApisConverter.class,
+//          description =
+//                  "Comma separated list of APIs to enable on JSON-RPC HTTP service on a sidechain (default: ${DEFAULT-VALUE})")
+//  private final Collection<RpcApi> sidechainRpcHttpApis = DEFAULT_JSON_RPC_APIS;
 
   @SuppressWarnings("FieldMayBeFinal") // Because PicoCLI requires Strings to not be final.
   @Option(
@@ -671,17 +684,15 @@ public class PantheonCommand implements DefaultCommandValues, Runnable {
       SidechainsConfiguration.eraAddress = eraAddress;
       SidechainsConfiguration.infuraToken = infuraToken;
 
+//      SidechainsConfiguration.network = network.toString();
+//      SidechainsConfiguration.isRpcHttpEnabled = Boolean.toString(isRpcHttpEnabled);
+//      SidechainsConfiguration.p2pPort = p2pPort;
+
       SidechainsConfiguration.sidechainsDataPath = sidechainsDataPath;
-
-      SidechainsConfiguration.network = network.toString();
-
-      SidechainsConfiguration.isRpcHttpEnabled = Boolean.toString(isRpcHttpEnabled);
-
-      SidechainsConfiguration.p2pPort = p2pPort;
-      SidechainsConfiguration.sidechainsRpcHttpPort = Integer.toString(sidechainsHttpPort);
-      SidechainsConfiguration.sidechainsHttpPort = sidechainsHttpPort;
-      SidechainsConfiguration.sidechainsPort = sidechainsPort;
       SidechainsConfiguration.sidechainsP2pPort = sidechainsP2pPort;
+      SidechainsConfiguration.sidechainsRpcHttpPort = sidechainsRpcHttpPort;
+      SidechainsConfiguration.sidechainsRpcWsPort = sidechainsRpcWsPort;
+      SidechainsConfiguration.sidechainsScRpcHttpPort = sidechainsScRpcHttpPort;
     }
 
     final EthNetworkConfig ethNetworkConfig = updateNetworkConfig(getNetwork());

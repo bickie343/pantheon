@@ -25,6 +25,7 @@ import tech.pegasys.pantheon.ethereum.jsonrpc.websocket.methods.era.EthereumRegi
 import tech.pegasys.pantheon.ethereum.jsonrpc.websocket.methods.era.Finder;
 import tech.pegasys.pantheon.ethereum.jsonrpc.websocket.subscription.SubscriptionManager;
 import tech.pegasys.pantheon.ethereum.jsonrpc.websocket.subscription.request.SubscriptionRequestMapper;
+import tech.pegasys.pantheon.sidechains.SidechainConfigFactory;
 import tech.pegasys.pantheon.sidechains.SidechainsConfiguration;
 import tech.pegasys.pantheon.sidechains.SidechainsPantheonRunner;
 
@@ -63,7 +64,8 @@ public class CreateSideChain extends AbstractSubscriptionMethod {
             response.put("port", new String(domainInfo.getValue("port"), StandardCharsets.UTF_8));
 
             // launch pantheon node
-            new SidechainsPantheonRunner().start();
+            SidechainConfigFactory.Config config = SidechainConfigFactory.createConfig();
+            new SidechainsPantheonRunner().start(config);
 
             response.put("result", "Success");
         } catch (Exception e) {

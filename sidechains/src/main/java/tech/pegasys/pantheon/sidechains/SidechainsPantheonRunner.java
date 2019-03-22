@@ -30,23 +30,22 @@ public class SidechainsPantheonRunner {
     logger = getLogger();
   }
 
-  public String start() {
+  public String start(SidechainConfigFactory.Config config) {
 
     String classpathStr = System.getProperty("java.class.path");
-    SidechainConfigFactory.Config config = SidechainConfigFactory.createConfig();
 
     String[] command = {
             "java",
             "-cp", classpathStr,
             "tech.pegasys.pantheon.Pantheon",
-            "--network=" + SidechainsConfiguration.network,
+            "--network=DEV",
             "--rpc-http-enabled=true",
             "--rpc-http-api=ADMIN, ETH, NET",
             "--discovery-enabled=true",
             "--data-path=" + config.dataPath,
             "--p2p-port=" + config.p2pPort,
-            "--rpc-http-port=" + config.rpcHttpPort
-//              "--bootnodes"
+            "--rpc-http-port=" + config.rpcHttpPort,
+            "--network-id=" + config.networkId
     };
 
     try {
@@ -61,7 +60,7 @@ public class SidechainsPantheonRunner {
       return "Error";
     }
 
-    String[] params = Arrays.copyOfRange(command, 3, command.length-1);
+    String[] params = Arrays.copyOfRange(command, 3, command.length);
     return Arrays.toString(params);
   }
 

@@ -15,7 +15,6 @@ public class SidechainsConfiguration {
   public static String infuraToken;
 
   // Additional settings for this node
-  public static String sidechainsDataPath;
   public static String network;
   public static String discoveryEnabled;
   public static String isRpcHttpEnabled;
@@ -27,8 +26,9 @@ public class SidechainsConfiguration {
   public static int p2pPort;
 
   // Setup for created sidechain nodes
-  public static String sidechainsRpcHttpPort;
-  public static int sidechainsHttpPort;
-  public static int sidechainsPort;
+  public static String sidechainsDataPath;
   public static int sidechainsP2pPort;
+  public static int sidechainsRpcHttpPort;
+  public static int sidechainsRpcWsPort;
+  public static int sidechainsScRpcHttpPort;
 }
