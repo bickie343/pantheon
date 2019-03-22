@@ -27,3 +27,4 @@ build/
 out/
 site/
 sidechains/node[0-9]*/
+sidechains/sidechain/*

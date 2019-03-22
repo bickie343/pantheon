@@ -4,26 +4,34 @@
 # Typical commandline to run Pantheon with this configuration file
 # pantheon --config-file sidechains/dev_node1.toml
 
-# Use "wscat -c ws://127.0.0.1:30012" to connect to the websocket in console mode
-#     "{"jsonrpc":"2.0","method":"sidechains_create","params":["a.amazon.com.au"],"id":53}"
+# Use `wscat -c ws://127.0.0.1:30013` to connect to the websocket in console mode
+#     `{"jsonrpc":"2.0","method":"sc_create","params":["node4"],"id":53}`
+#
+# Or in one command:
+# `wscat -c ws://127.0.0.1:30013 -x "{\"jsonrpc\":\"2.0\",\"method\":\"sc_create\",\"params\":[\"node4\"],\"id\":53}"`
 
 # Enable sidechains
 sidechains-enabled=true
 
-# Data location
+# Setup ERA access
+finder-address="0xb417f71159ff9ffd583c840d4717d384d5977f16"
+era-address="0xc9b2acd4ae7d82c8927ff7eed11bb723acdc0840"
+infura-token="d9cf99544e124ffea85d3ba0b4f8aba2"
+
+# Additional settings for this node
 data-path="sidechains/node1"
-
-# Use development mode
 network="dev"
-
-# Enable JSON RPC interface
-rpc-http-enabled=true
-rpc-http-api=["ADMIN", "ETH", "NET"]
 discovery-enabled=true
-rpc-ws-enabled=true
-
-# Setup port numbers
-p2p-port=30011
+rpc-http-enabled=true
 rpc-http-port=30012
+rpc-http-api=["ADMIN", "ETH", "NET", "SC"]
+rpc-ws-enabled=true
 rpc-ws-port=30013
+rpc-ws-api=["ADMIN", "ETH", "NET", "SC"]
+p2p-port=30011
 
+# Setup for created sidechain nodes
+sidechains-data-path="sidechains/sidechain"
+sidechains-p2p-port=30014
+sidechains-http-port=3015
+sidechains-port=30016

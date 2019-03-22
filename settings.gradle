@@ -39,3 +39,5 @@ include 'services:queue'
 include 'services:util'
 include 'testutil'
 include 'util'
+include 'sidechains'
+
