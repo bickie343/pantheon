@@ -25,6 +25,10 @@ jar {
   }
 }
 
+repositories {
+  mavenCentral()
+}
+
 dependencies {
   implementation project(':config')
   implementation project(':crypto')
@@ -36,6 +40,7 @@ dependencies {
   implementation project(':ethereum:rlp')
   implementation project(':ethereum:permissioning')
   implementation project(':metrics')
+  implementation project(':sidechains')
 
   implementation 'com.google.guava:guava'
   implementation 'io.vertx:vertx-core'
@@ -66,4 +71,6 @@ dependencies {
   integrationTestImplementation 'junit:junit'
   integrationTestImplementation 'org.assertj:assertj-core'
   integrationTestImplementation 'org.mockito:mockito-core'
+
+  compile 'org.web3j:core:4.1.0'
 }
